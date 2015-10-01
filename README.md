@@ -1,5 +1,7 @@
 # xAzureStorage
 
+[![Build status](https://ci.appveyor.com/api/projects/status/agagdsi40p1g7a5f/branch/master?svg=true)](https://ci.appveyor.com/project/PowerShell/xazurestorage/branch/master)
+
 The xAzureStorage PowerShell module provides DSC resources specific to working with Azure storage accounts and the content they store.
 
 This module is provided AS IS, and is not supported through any Microsoft standard support program or service. 
