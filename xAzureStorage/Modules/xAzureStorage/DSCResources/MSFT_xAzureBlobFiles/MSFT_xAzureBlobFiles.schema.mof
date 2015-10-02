@@ -1,4 +1,4 @@
-[ClassVersion("1.0.0.0"), FriendlyName(xAzureBlobFiles")]
+[ClassVersion("1.0.0.0"), FriendlyName("xAzureBlobFiles")]
 class MSFT_xAzureBlobFiles : OMI_BaseResource
 {
     [Key] String Path;
