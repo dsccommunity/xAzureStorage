@@ -1,4 +1,4 @@
-version: 1.0.{build}.0
+version: 1.1.{build}.0
 
 install:
     - cinst -y pester
@@ -24,7 +24,7 @@ after_test:
     - ps: |
         Remove-Item (Join-Path "$env:APPVEYOR_BUILD_FOLDER\xAzureStorage\modules\xAzureStorage" "xAzureStorage.pssproj")
         $manifest = Join-Path "$env:APPVEYOR_BUILD_FOLDER\xAzureStorage\modules\xAzureStorage" "xAzureStorage.psd1"
-        (Get-Content $manifest -Raw).Replace("1.0.0.0", $env:APPVEYOR_BUILD_VERSION) | Out-File $manifest
+        (Get-Content $manifest -Raw).Replace("1.1.0.0", $env:APPVEYOR_BUILD_VERSION) | Out-File $manifest
         Add-Type -assemblyname System.IO.Compression.FileSystem
         [System.IO.Compression.ZipFile]::CreateFromDirectory("$env:APPVEYOR_BUILD_FOLDER\xAzureStorage\modules\xAzureStorage", "$env:APPVEYOR_BUILD_FOLDER\xAzureStorage.zip")
         Get-ChildItem "$env:APPVEYOR_BUILD_FOLDER\xAzureStorage.zip" | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }

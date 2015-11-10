@@ -7,7 +7,8 @@ function Get-TargetResource
         [parameter(Mandatory = $true)]  [System.String]  $Path,
         [parameter(Mandatory = $true)]  [System.String]  $StorageAccountName,
         [parameter(Mandatory = $true)]  [System.String]  $StorageAccountKey,
-        [parameter(Mandatory = $true)]  [System.String]  $StorageAccountContainer
+        [parameter(Mandatory = $true)]  [System.String]  $StorageAccountContainer,
+        [parameter(Mandatory = $false)] [System.Boolean] $ValidateCheckSum
     )
     return @{
         Path = $Path
@@ -26,7 +27,8 @@ function Set-TargetResource
         [parameter(Mandatory = $true)]  [System.String]  $Path,
         [parameter(Mandatory = $true)]  [System.String]  $StorageAccountName,
         [parameter(Mandatory = $true)]  [System.String]  $StorageAccountKey,
-        [parameter(Mandatory = $true)]  [System.String]  $StorageAccountContainer
+        [parameter(Mandatory = $true)]  [System.String]  $StorageAccountContainer,
+        [parameter(Mandatory = $false)] [System.Boolean] $ValidateCheckSum
     )
     if ( -not (Test-Path $Path) ) { New-Item $Path  -Type Directory | Out-Null }
 
@@ -41,13 +43,15 @@ function Set-TargetResource
             Write-Verbose "Downloading file $($_.Name) as it does not exist"
             Get-AzureStorageBlobContent -Blob $_.Name -Container $StorageAccountContainer -Destination $Path -Context $context | Out-Null
         } else {
-            $md5 = new-object -TypeName System.Security.Cryptography.MD5CryptoServiceProvider
-            $localHash = [System.Convert]::ToBase64String($md5.ComputeHash([System.IO.File]::ReadAllBytes((Join-Path -Path $Path -ChildPath $_.Name))))
-            $cloudHash = $_.ICloudBlob.Properties.ContentMD5
+            if ($ValidateCheckSum -eq $true) {
+                $md5 = new-object -TypeName System.Security.Cryptography.MD5CryptoServiceProvider
+                $localHash = [System.Convert]::ToBase64String($md5.ComputeHash([System.IO.File]::ReadAllBytes((Join-Path -Path $Path -ChildPath $_.Name))))
+                $cloudHash = $_.ICloudBlob.Properties.ContentMD5
 
-            if ($localHash -ne $cloudHash) {
-                Write-Verbose "Downloading file $($_.Name) as the local hash does not match the hash in Azure"
-                Get-AzureStorageBlobContent -Blob $_.Name -Container $StorageAccountContainer -Destination $Path -Context $context -Force | Out-Null
+                if ($localHash -ne $cloudHash) {
+                    Write-Verbose "Downloading file $($_.Name) as the local hash does not match the hash in Azure"
+                    Get-AzureStorageBlobContent -Blob $_.Name -Container $StorageAccountContainer -Destination $Path -Context $context -Force | Out-Null
+                }
             }
         }
     }
@@ -62,7 +66,8 @@ function Test-TargetResource
         [parameter(Mandatory = $true)]  [System.String]  $Path,
         [parameter(Mandatory = $true)]  [System.String]  $StorageAccountName,
         [parameter(Mandatory = $true)]  [System.String]  $StorageAccountKey,
-        [parameter(Mandatory = $true)]  [System.String]  $StorageAccountContainer
+        [parameter(Mandatory = $true)]  [System.String]  $StorageAccountContainer,
+        [parameter(Mandatory = $false)] [System.Boolean] $ValidateCheckSum
     )
 
     $VerbosePreference = "Continue"
@@ -82,13 +87,15 @@ function Test-TargetResource
             Write-Verbose "File $($_.Name) does not exist"
             $returnVal = $false
         } else {
-            $md5 = new-object -TypeName System.Security.Cryptography.MD5CryptoServiceProvider
-            $localHash = [System.Convert]::ToBase64String($md5.ComputeHash([System.IO.File]::ReadAllBytes((Join-Path -Path $Path -ChildPath $_.Name))))
-            $cloudHash = $_.ICloudBlob.Properties.ContentMD5
+            if ($ValidateCheckSum -eq $true) {
+                $md5 = new-object -TypeName System.Security.Cryptography.MD5CryptoServiceProvider
+                $localHash = [System.Convert]::ToBase64String($md5.ComputeHash([System.IO.File]::ReadAllBytes((Join-Path -Path $Path -ChildPath $_.Name))))
+                $cloudHash = $_.ICloudBlob.Properties.ContentMD5
 
-            if ($localHash -ne $cloudHash) {
-                Write-Verbose "File $($_.Name) does not match the MD5 hash of the file in cloud storage and needs to be downloaded again"
-                $returnVal = $false
+                if ($localHash -ne $cloudHash) {
+                    Write-Verbose "File $($_.Name) does not match the MD5 hash of the file in cloud storage and needs to be downloaded again"
+                    $returnVal = $false
+                }
             }
         }
     }

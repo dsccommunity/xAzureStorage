@@ -7,7 +7,7 @@ Set-StrictMode -Version latest
 $RepoRoot = (Resolve-Path $PSScriptRoot\..).Path
 Import-Module "$PSScriptRoot\xAzureStorage.TestHelpers.psm1"
 
-Describe 'xSharePoint whole of module tests' {
+Describe 'xAzureStorage whole of module tests' {
 
     $mofFiles = @(Get-ChildItem $RepoRoot -Recurse -Filter "*.schema.mof" -File | ? {
         ($_.FullName -like "*\DscResources\*")
