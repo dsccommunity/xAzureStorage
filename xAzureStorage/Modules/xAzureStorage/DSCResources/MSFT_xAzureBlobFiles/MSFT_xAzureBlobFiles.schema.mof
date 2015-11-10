@@ -4,5 +4,6 @@ class MSFT_xAzureBlobFiles : OMI_BaseResource
     [Key] String Path;
     [Required] String StorageAccountName;
     [Required] String StorageAccountKey;
-    [Required] String StorageAccountContainer;    
+    [Required] String StorageAccountContainer; 
+    [Write] Boolean ValidateCheckSum;   
 };

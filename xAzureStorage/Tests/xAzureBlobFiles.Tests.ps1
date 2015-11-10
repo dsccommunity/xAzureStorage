@@ -16,6 +16,7 @@ Describe "xAzureBlobFiles" {
             StorageAccountName      = "myfakeaccount"
             StorageAccountContainer = "container1"
             StorageAccountKey       = "Your Storage Key Goes Here"
+            ValidateCheckSum        = $true
         }
 
         if ($null -eq (Get-Command New-AzureStorageContext -ErrorAction SilentlyContinue)) {
@@ -118,6 +119,16 @@ namespace Microsoft.WindowsAzure.Commands.Common.Storage {
 
             It "returns false from the test method" {
                 Test-TargetResource @testParams | Should Be $false
+            }
+
+            $testParams.ValidateCheckSum = $false
+
+            It "ignores the failing hash in the set method when told to skip the hash check" {
+                Set-TargetResource @testParams
+            }
+
+            It "ignores the failing hash in the test method when told to skip the hash check" {
+                Test-TargetResource @testParams | Should Be $true
             }
         }
 
