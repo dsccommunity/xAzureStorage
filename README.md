@@ -35,6 +35,10 @@ Review the "examples" directory in the xAzureStorage resource for some general e
 
 ## Version History
 
+### Unreleased
+
+ * Added ValidateCheckSum property to xAzureBlobFiles
+
 ### 1.0.0.0
 
  * Initial release including xAzureBlobFiles resource
