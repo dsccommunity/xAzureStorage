@@ -1,6 +1,6 @@
 Configuration BlobStorageSample
 {
-    Import-DscResource AzureStorageDsc
+    Import-DscResource -ModuleName AzureStorageDsc
 
     AzureBlobFiles ExampleFiles {
         Path                    = "C:\sample path"
