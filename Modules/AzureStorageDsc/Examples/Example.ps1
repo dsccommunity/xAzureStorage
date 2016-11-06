@@ -1,8 +1,8 @@
 Configuration BlobStorageSample
 {
-    Import-DscResource xAzureStorage
+    Import-DscResource AzureStorageDsc
 
-    xAzureBlobFiles ExampleFiles {
+    AzureBlobFiles ExampleFiles {
         Path                    = "C:\sample path"
         StorageAccountName      = "myfakeaccount"
         StorageAccountContainer = "container1"

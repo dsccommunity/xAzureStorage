@@ -1,0 +1,9 @@
+[ClassVersion("1.0.0.0"), FriendlyName("AzureBlobFiles")]
+class MSFT_AzureBlobFiles : OMI_BaseResource
+{
+    [Key, Description("The local path on the file system that will contain files from Azure")] String Path;
+    [Required, Description("The name of the storage account in Azure to copy files from")] String StorageAccountName;
+    [Required, Description("The storage account key to use when accessing files in Azure")] String StorageAccountKey;
+    [Required, Description("The name of the container to download files from in the storage account")] String StorageAccountContainer; 
+    [Write, Description("True if the checksum of the files should be checked as well as whether or not they exist locally, false to skip checksum checking and only download when they don't exist locally")] Boolean ValidateCheckSum;   
+};
