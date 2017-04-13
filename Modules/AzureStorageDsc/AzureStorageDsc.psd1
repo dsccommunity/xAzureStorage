@@ -30,7 +30,7 @@ Copyright = '(c) 2015-2016 Microsoft Corporation. All rights reserved.'
 Description = 'This DSC module allows for actions relating to Azure storage accounts'
 
 # Minimum version of the Windows PowerShell engine required by this module
-# PowerShellVersion = ''
+PowerShellVersion = '4.0'
 
 # Name of the Windows PowerShell host required by this module
 # PowerShellHostName = ''

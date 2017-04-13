@@ -25,6 +25,8 @@ function Get-TargetResource
         $ValidateCheckSum
     )
     
+    Write-Verbose -Message "Passing out the current settings that the resource should use"
+
     return @{
         Path = $Path
         StorageAccountName = $StorageAccountName
@@ -59,6 +61,8 @@ function Set-TargetResource
         $ValidateCheckSum
     )
     
+    Write-Verbose -Message "Copying content from Azure storage to local path"
+
     if ( -not (Test-Path $Path) ) 
     { 
         New-Item $Path -Type Directory | Out-Null 
