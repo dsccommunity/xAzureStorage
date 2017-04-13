@@ -39,27 +39,10 @@ function Invoke-TestHarness
     }
 
     Import-Module -Name "$repoDir\modules\AzureStorageDsc\AzureStorageDsc.psd1"
-    $testsToRun = @()
+    $testsToRun = @(
+        "$repoDir\tests\unit"
+    )
 
-    # Run Unit Tests
-    $versionsPath = Join-Path -Path $repoDir -ChildPath "\Tests\Unit\Stubs\SharePoint\"
-    $versionsToTest = (Get-ChildItem -Path $versionsPath).Name
-    # Import the first stub found so that there is a base module loaded before the tests start
-    $firstVersion = $versionsToTest | Select-Object -First 1
-    $firstStub = Join-Path -Path $repoDir `
-                           -ChildPath "\Tests\Unit\Stubs\SharePoint\$firstVersion\Microsoft.SharePoint.PowerShell.psm1"
-    Import-Module $firstStub -WarningAction SilentlyContinue
-
-    $versionsToTest | ForEach-Object -Process {
-        $stubPath = Join-Path -Path $repoDir `
-                              -ChildPath "\Tests\Unit\Stubs\SharePoint\$_\Microsoft.SharePoint.PowerShell.psm1"
-        $testsToRun += @(@{
-            'Path' = (Join-Path -Path $repoDir -ChildPath "\Tests\Unit")
-            'Parameters' = @{ 
-                'SharePointCmdletModule' = $stubPath
-            }
-        })
-    }
 
     # DSC Common Tests
     if ($PSBoundParameters.ContainsKey('DscTestsPath') -eq $true)
