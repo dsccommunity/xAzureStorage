@@ -2,17 +2,26 @@ version: 1.0.0.{build}
 image: WMF 5
 
 install:
-    - appveyor DownloadFile https://dist.nuget.org/win-x86-commandline/latest/nuget.exe
+    - git clone https://github.com/PowerShell/DscResource.Tests
+
     - ps: |
-        Import-Module "$env:APPVEYOR_BUILD_FOLDER\.appveyor\appveyor.psm1"
-        Start-AppveyorInstallTask
+        $moduleName = 'AzureStorageDsc'
+        $mainModuleFolder = "Modules\$moduleName"
+        Import-Module -Name "$env:APPVEYOR_BUILD_FOLDER\DscResource.Tests\AppVeyor.psm1"
+        Invoke-AppveyorInstallTask
         
 build: off
 
 test_script:
     - ps: |
-        Start-AppveyorTestScriptTask
+        Invoke-AppveyorTestScriptTask `
+            -Type 'Harness' `
+            -MainModulePath $mainModuleFolder `
+            -CodeCovIo
 
 after_test:
     - ps: |
-        Start-AppveyorAfterTestTask
+        Invoke-AppveyorAfterTestTask `
+            -Type 'Wiki' `
+            -MainModulePath $mainModuleFolder `
+            -ResourceModuleName $moduleName
